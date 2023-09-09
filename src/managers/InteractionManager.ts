@@ -1,6 +1,6 @@
-import HexagonApp from "./HexagonApp";
+import HexagonApp from "../HexagonApp";
 import * as PIXI from "pixi.js";
-import IDragHandler from "./IDragHandler";
+import IDragHandler from "../interfaces/IDragHandler";
 
 export default class InteractionManager {
     dragTarget: any;

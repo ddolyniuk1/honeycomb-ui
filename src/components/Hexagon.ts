@@ -1,130 +1,8 @@
 import * as PIXI from 'pixi.js';
-import HexagonApp from './HexagonApp';
-import IDragHandler from './IDragHandler';
-
-
-function createGradTexture()
-{
-    // adjust it if somehow you need better quality for very very big images
-    const quality = 256;
-    const canvas = document.createElement('canvas');
-
-    canvas.width = quality;
-    canvas.height = 1;
-
-    const ctx = canvas.getContext('2d');
-
-    // use canvas2d API to create gradient
-    const grd = ctx.createLinearGradient(0, 0, quality, 0);
-    
-    grd.addColorStop(0, 'rgba(255, 255, 255, 0.0)');
-    grd.addColorStop(0.3, 'cyan');
-    grd.addColorStop(0.7, 'red');
-    grd.addColorStop(1, 'green');
-
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, quality, 1);
-
-    return PIXI.Texture.from(canvas);
-}
-
-const gradTexture = createGradTexture();
-
-
-class Point {
-  private _x: number;
-  private _y: number;
-
-  constructor(x: number, y: number) {
-    this._x = x;
-    this._y = y;
-  }
-
-  get x(): number {
-    return this._x;
-  }
-
-  set x(value: number) {
-    this._x = value;
-  }
-
-  get y(): number {
-    return this._y;
-  }
-
-  set y(value: number) {
-    this._y = value;
-  }
-}
-
-class HexagonEdge extends PIXI.Graphics {
-  private _start: Point;
-  private _end: Point;
-  private _centroid: Point;
-  private _color: number;
-  private _thickness: number;
-  private _alpha: number;
-
-  constructor(start: Point, end: Point, color: number = 0xFFFFFF, thickness: number = 1, alpha: number = 1) {
-      super();
-      this._start = start;
-      this._end = end;
-      this._color = color;
-      this._thickness = thickness;
-      this._alpha = alpha;
-      this._centroid = new Point((start.x + end.x) / 2, (start.y + end.y) / 2);
-      this.redraw();
-  }
-
-  get start(): Point {
-      return this._start;
-  }
-
-  get end(): Point {
-      return this._end;
-  }
-
-  get centroid(): Point {
-      return this._centroid;
-  }
-
-  get color(): number {
-      return this._color;
-  }
-
-  set color(value: number) {
-      this._color = value;
-      this.redraw();
-  }
-
-  get thickness(): number {
-      return this._thickness;
-  }
-
-  set thickness(value: number) {
-      this._thickness = value;
-      this.redraw();
-  }
-
-  get lineAlpha(): number {
-      return this._alpha;
-  }
-
-  set lineAlpha(value: number) {
-      this._alpha = value;
-      this.redraw();
-  }
-
-  redraw(): void {
-      this.clear();
-      this.lineStyle(this._thickness, this._color, this._alpha);
-      this.moveTo(this._start.x, this._start.y);
-      this.lineTo(this._end.x, this._end.y);
-  }
-}
-
-
-
+import HexagonEdge from './HexagonEdge'
+import HexagonApp from '../HexagonApp';
+import IDragHandler from '../interfaces/IDragHandler';
+ 
 class Hexagon extends PIXI.Graphics implements IDragHandler {
   private thicknesses: number[] = [1, 2, 3, 4, 5, 6];
   private colors: number[] = [ColorUtil.convert('#ff9900')];
@@ -154,8 +32,8 @@ class Hexagon extends PIXI.Graphics implements IDragHandler {
       [0, -this.hexRadius] // Close the loop
     ];
     for (let i = 0; i < this.points.length - 1; i++) {
-      const start = new Point(this.points[i][0], this.points[i][1]);
-      const end = new Point(this.points[i + 1][0], this.points[i + 1][1]);
+      const start = new PIXI.Point(this.points[i][0], this.points[i][1]);
+      const end = new PIXI.Point(this.points[i + 1][0], this.points[i + 1][1]);
       const edge = new HexagonEdge(start, end);
       this.edges.push(edge);
     }

@@ -1,6 +1,6 @@
-import Hexagon from "./Hexagon";
+import Hexagon from "./components/Hexagon";
 import * as PIXI from 'pixi.js';
-import InteractionManager from "./InteractionManager";
+import InteractionManager from "./managers/InteractionManager";
 
 export default class HexagonApp { 
   private _app: PIXI.Application;
@@ -60,5 +60,5 @@ export default class HexagonApp {
     hexagon.y = y;
 
     this.interactionManager.initDragInteraction(hexagon);
-  } 
+  }
 }
